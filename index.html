@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>NautsRankings V2</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="/standalone/nautsrankings/images/favicon.png"/>
+  <link rel="stylesheet" type="text/css" href="/standalone/nautsrankings/styles/main.css">
+</head>
+<body>
+  <!-- Loading displayed when searching -->
+  <div id="loading">
+    <img src="/standalone/nautsrankings/images/loading.png"/>
+    <div>Loading...</div>
+  </div>
+
+  <!-- Top bar -->
+  <div id="header">
+    <div id="logo">
+      <img src="/standalone/nautsrankings/images/favicon.png"><span>NautsRankings V2</span>
+    </div>
+    <div id="search-input-container">
+      <input placeholder="Search by name" type="text" id="search-username"><span id="display-search-box">+</span>
+    </div>
+  </div>
+
+  <!-- Search box -->
+  <div id="search-box-background"></div>
+  <div id="search-box">
+    <div id="search-box-close" class="search-title">[Close]</div>
+    <!-- Naut list -->
+    <span class="search-title-first">Awesomenauts</span><hr>
+    <div id="search-naut-list"></div>
+    <!-- League list -->
+    <span class="search-title">League</span><hr>
+    <div id="search-league-list"></div>
+
+    <!-- Sorting -->
+    <span class="search-title">Sorting</span><hr>
+    <div id="search-sorting">
+      <select id="search-sort-type">
+        <option value="rank">Sort by Rank</option>
+        <option value="username">Sort by Username</option>
+        <option value="winrate">Sort by Win%</option>
+        <option value="seasonPlayed">Sort by Played</option>
+        <option value="allPlayed">Sort by Played all time</option>
+        <option value="rating">Sort by Rating</option>
+      </select>
+
+      <select id="search-sorting-order">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+
+    <!-- Settings, disabled currently because not implemented
+    <span class="search-title">Settings</span><hr>
+    <div id="as-settings">
+    <label>Start from this user</label><input placeholder="Your username..." type="text">
+  </div>-->
+    <br><div id="search-box-buttons">
+    <input type="button" id="search-box-search" value="Search">
+  </div>
+</div>
+
+<!-- Main leaderboard -->
+<div id="content-container">
+  <div id="leaderboard-container">
+    <table id="leaderboard"></table>
+  </div>
+  <div id="no-result">No results.</div>
+</div>
+
+<!-- About and last resfreshed time -->
+<div id="about">
+  <span id="about-copyright">Made by <a href="http://steamcommunity.com/id/Blatoy/">Blatoy</a> with the help of <a href="https://github.com/Marukyu">Marukyu</a> and his awesome API. Inspired by Josh Medeiros's old Nautsrankings.
+    <a href="/donate">Donations</a> welcome!</span>
+    <div id="about-update-time">Ranks updated <span id="rank-update-time"></span></div>
+  </div>
+
+  <script src="/standalone/nautsrankings/scripts/jquery.min.js"></script>
+  <script src="/standalone/nautsrankings/scripts/config.js"></script>
+  <script src="/standalone/nautsrankings/scripts/utils.js"></script>
+  <script src="/standalone/nautsrankings/scripts/country-names.js"></script>
+  <script src="/standalone/nautsrankings/scripts/controllers/search.js"></script>
+  <script src="/standalone/nautsrankings/scripts/views/leaderboard.js"></script>
+  <script src="/standalone/nautsrankings/scripts/views/search.js"></script>
+  <script src="/standalone/nautsrankings/scripts/main.js"></script>
+
+  <!-- Used to count visitors -->
+  <!--<iframe style="display:none;" src="https://orikaru.net/resources/logic/php/ajax/account.php"></iframe>-->
+
+  <!-- Google Analytics  -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62317289-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+</body>
+</html>
