@@ -8,16 +8,18 @@ var SearchView = new function() {
     this.addLeagueIconsToSearch();
     this.addNautIconsToSearch();
     this.addEvents();
+    this.updateSearchParametersFromURL();
   }
 
   // Add events related to the search
   this.addEvents = function() {
     // Reset everything on logo click
-    $("#logo").on("click", function() {
+    $("#logo, #search-box-reset").on("click", function() {
       LeaderboardView.setLoadingDisplay(true);
       LeaderboardView.clearTable();
       SearchController.reset();
       self.reset();
+      setURLData("");
       SearchController.getPlayersFromAPI(function() {
         LeaderboardView.setLoadingDisplay(false);
       });
@@ -67,6 +69,8 @@ var SearchView = new function() {
       "sortOrder": $("#search-sorting-order").val()
     });
 
+    self.setURL(SearchController.getSearchParameters());
+
     // "Loading mode"
     LeaderboardView.clearTable();
     LeaderboardView.setLoadingDisplay(true);
@@ -76,6 +80,49 @@ var SearchView = new function() {
     SearchController.getPlayersFromAPI(function() {
       LeaderboardView.setLoadingDisplay(false);
     });
+  };
+
+  this.setURL = function(searchParameters) {
+    // URL Format is: nautID-nautID-nautID/leagues/sortByIndex/sortOrderIndex/username
+      var url =   searchParameters.nautsIds.join("-") + "/";
+      url     +=  searchParameters.leagueIds.join("") + "/";
+      url     +=  searchParameters.sortBy             + "/";
+      url     +=  searchParameters.sortOrder          + "/";
+      url     +=  encodeURIComponent(searchParameters.username) + "/";
+      setURLData(url);
+  };
+
+  this.updateSearchParametersFromURL = function() {
+    var urlData = getURLData();
+    if(!urlData) return;
+
+    // format: nautid-nautid-nautid/leagues/sortType/sortOrder/usernameEncoded
+    urlData = urlData.split("/");
+    urlData[0] = urlData[0].split("-");
+    $("#search-naut-list .naut-icon").each(function(){
+      for(var i = 0; i < urlData[0].length; ++i) {
+        if($(this).data("naut-id") == urlData[0][i]) {
+          console.log("...");
+          $(this).addClass("selected");
+          break;
+        }
+      }
+    });
+
+    $("#search-league-list .league-icon").each(function(){
+      for(var i = 0; i < urlData[1].length; ++i) {
+        if($(this).data("league-id") == urlData[1][i]) {
+          $(this).addClass("selected");
+          break;
+        }
+      }
+    });
+      // urlData[0].split("-"),
+    //  "leaguesIds"  : urlData[1].split(""),
+
+    $("#search-sort-type").val(urlData[2]);
+    $("#search-sorting-order").val(urlData[3]);
+    $("#search-username").val(decodeURIComponent(urlData[4]));
   };
 
   // Add leagues icon to the search-box

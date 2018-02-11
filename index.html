@@ -59,7 +59,8 @@
     <label>Start from this user</label><input placeholder="Your username..." type="text">
   </div>-->
     <br><div id="search-box-buttons">
-    <input type="button" id="search-box-search" value="Search">
+      <input type="button" id="search-box-search" value="Search">
+      <input class="red-button" type="button" id="search-box-reset" value="Reset">
   </div>
 </div>
 
@@ -73,9 +74,13 @@
 
 <!-- About and last resfreshed time -->
 <div id="about">
-  <span id="about-copyright">Made by <a href="http://steamcommunity.com/id/Blatoy/">Blatoy</a> with the help of <a href="https://github.com/Marukyu">Marukyu</a> and his awesome API. Inspired by Josh Medeiros's old Nautsrankings.
-    <a href="/donate">Donations</a> welcome!</span>
-    <div id="about-update-time">Ranks updated <span id="rank-update-time"></span></div>
+  <span id="about-copyright">
+    <a onclick="$('#about-desc').show(); $(this).hide(); $('#about-update-time').hide();" href="#">About Nautsrankings</a>
+    <span style="display: none;" id="about-desc">
+      Made by <a href="http://steamcommunity.com/id/Blatoy/">Blatoy</a> with the help of <a href="https://github.com/Marukyu">Marukyu</a> and his awesome API. Inspired by Josh Medeiros's old Nautsrankings.
+      <a href="/donate">Donations</a> welcome!</span>
+    </span>
+    <div id="about-update-time">Players found: <b><span id="result-count">0</span></b> - Ranks updated <b><span id="rank-update-time"></span></b></div>
   </div>
 
   <script src="/standalone/nautsrankings/scripts/jquery.min.js"></script>
@@ -83,6 +88,7 @@
   <script src="/standalone/nautsrankings/scripts/utils.js"></script>
   <script src="/standalone/nautsrankings/scripts/country-names.js"></script>
   <script src="/standalone/nautsrankings/scripts/controllers/search.js"></script>
+  <script src="/standalone/nautsrankings/scripts/controllers/leaderboard.js"></script>
   <script src="/standalone/nautsrankings/scripts/views/leaderboard.js"></script>
   <script src="/standalone/nautsrankings/scripts/views/search.js"></script>
   <script src="/standalone/nautsrankings/scripts/main.js"></script>

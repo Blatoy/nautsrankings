@@ -44,6 +44,18 @@ function setElementVisibility(selector, visibility) {
   }
 }
 
+function setURLData(hash) {
+  location.replace("#" + hash);
+}
+
+function getURLData() {
+  if(window.location.href.indexOf("#") != -1) {
+    return window.location.href.split("#")[1];
+  }
+
+  return false;
+}
+
 function queryAPI(action, params, callback) {
   $.get(API_URL, {action: action, params: params}, function(data){
     if(callback !== undefined) {

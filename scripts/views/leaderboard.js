@@ -58,19 +58,20 @@ var LeaderboardView = new function() {
     var tableContent = "";
     for(var i = 0; i < results.length; ++i) {
       var row = results[i];
-      var profileURL    = STEAM_PROFILE_URL + escapeHTML(row.steamId);
-      var totalPlayed   = parseInt(row.totalLoss + row.totalWin);
-      var seasonPlayed  = parseInt(row.seasonLoss + row.seasonWin);
-      var winRate       = (100 * (row.seasonWin / seasonPlayed)).toFixed(2);
-      var username      = escapeHTML(row.username);
-      var mainNautId    = escapeHTML(row.mainNautId);
-      var rating        = escapeHTML(row.rating);
-      var rank          = escapeHTML(row.rank);
-      var countryCode   = row.countryCode;
-      var imagePath     = PATH.IMAGES + "nauts-icon/Classicon_" + NautsRankings.getNautFromID(mainNautId).className + ".png";
+      var profileURL      = STEAM_PROFILE_URL + escapeHTML(row.steamId);
+      var totalPlayed     = parseInt(row.totalLoss + row.totalWin);
+      var seasonPlayed    = parseInt(row.seasonLoss + row.seasonWin);
+      var winRate         = (100 * (row.seasonWin / seasonPlayed)).toFixed(2);
+      var username        = escapeHTML(row.username);
+      var mainNautId      = escapeHTML(row.mainNautId);
+      var rating          = escapeHTML(row.rating);
+      var rank            = escapeHTML(row.rank);
+      var countryCode     = row.countryCode;
+      var leagueImagePath = PATH.IMAGES + "leagues/UI_League" + LeaderboardController.getLeagueNumberFromRank(row.rank) + ".png";
+      var imagePath       = PATH.IMAGES + "nauts-icon/Classicon_" + NautsRankings.getNautFromID(mainNautId).className + ".png";
 
       // Set country code to flag image if it's set
-      if(countryCode != "") {
+      if(countryCode && countryCode.length == 2) {
         countryCode     = "<img title='" + COUNTRY_CODE_TO_NAME[countryCode] + "' src='" + PATH.IMAGES + "/flags/" + countryCode.toLowerCase() + ".png'/>";
       }
       else {
@@ -80,7 +81,7 @@ var LeaderboardView = new function() {
       // Append the text to the table content
       tableContent +=
         "<tr>" +
-          "<td>" + rank + "</td>" +
+          "<td><img style='float:left;' src='" + leagueImagePath +"'/> " + rank + "</td>" +
           "<td><a href='" + profileURL + "' target='_blank'>" + username + "</a></td>" +
           "<td>" + winRate + "%</td>" +
           "<td>" + seasonPlayed + "</td>" +

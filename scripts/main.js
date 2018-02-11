@@ -1,6 +1,7 @@
 // "Entry point" of the program, init views and controllers
 var NautsRankings = new function() {
   var self = this;
+  this.playerCount = -1;
 
   this.init = function() {
     // Get and display the last rank update time

@@ -10,10 +10,12 @@ var SearchController = new function() {
   // Reset search parameters and display 250 first players
   this.init = function() {
     this.reset();
+    this.updateSearchParametersFromURL();
     // Get total player count for league calculation
     queryAPI("get-user-count", {page: 0}, function(data) {
       // Track user count for leagues icon display
-      userCount = data.result;
+      NautsRankings.playerCount = data.result;
+      $("#result-count").text(data.result); // TODO: Don't do this in the controller
       // Get 250 first players
       self.getPlayersFromAPI(function(){
         LeaderboardView.setLoadingDisplay(false);
@@ -21,14 +23,31 @@ var SearchController = new function() {
     });
   };
 
+  this.updateSearchParametersFromURL = function() {
+    var urlData = getURLData();
+    if(!urlData) return;
+
+    // format: nautid-nautid-nautid/leagues/sortType/sortOrder/usernameEncoded
+    urlData = urlData.split("/");
+    this.updateSearchParameters({
+      "nautsIds"    : urlData[0] != "" ? urlData[0].split("-") : [],
+      "leagueIds"  : urlData[1].split(""),
+      "sortBy"      : urlData[2],
+      "sortOrder"   : urlData[3],
+      "username"    : decodeURIComponent(urlData[4])
+    });
+
+    self.setUseSearch(true);
+  };
+
   // Reset search parameters
   this.reset = function() {
     searchParameters = {
-      "username": "",
-      "nautsIds": [],
-      "leagueIds": [],
-      "sortBy": "rank",
-      "sortOrder": "asc"
+      "username"  : "",
+      "nautsIds"  : [],
+      "leagueIds" : [],
+      "sortBy"    : "rank",
+      "sortOrder" : "asc"
     };
 
     userSearch = false;
@@ -57,6 +76,10 @@ var SearchController = new function() {
     }
   };
 
+  this.getSearchParameters = function() {
+    return searchParameters;
+  };
+
   // Get a list of all players matching searchParameters and add them to the leadeboard
   this.getPlayersFromAPI = function(callback) {
     // Prevent spamming the API for nothing
@@ -76,7 +99,7 @@ var SearchController = new function() {
     });
   };
 
-  // When useSearch is set to false, use "get-all" and effectively prevent to make any query
+    // When useSearch is set to false, use "get-all" and effectively prevent to make any query
   this.setUseSearch = function(useSearch_) {
     useSearch = useSearch_;
   };
@@ -87,6 +110,13 @@ var SearchController = new function() {
       // Append results to the leadeboard
       searchStatus = SEARCH_STATUS.LOADED;
       LeaderboardView.addResults(results);
+      // TODO: Don't do this in the controller
+      if(useSearch) {
+        $("#result-count").text(results.length + (results.length == 250 ? "+" : ""));
+      }
+      else {
+        $("#result-count").text(NautsRankings.playerCount);
+      }
     }
     else {
       // Reached the end, prevent news query

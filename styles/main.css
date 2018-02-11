@@ -47,6 +47,14 @@ input[type=button]:hover  {
     background-color: #238BD8;
 }
 
+.red-button {
+  background-color: rgb(255, 40, 40)!important;
+}
+
+.red-button:hover {
+  background-color: rgb(255, 10, 10)!important;
+}
+
 /* HEADER */
 #header {
   height: 50px;
@@ -386,8 +394,8 @@ select, select option {
     width: 100%;
   }
 
-  .search-title {
-    text-align: left;
+  .search-title, .search-title-first {
+    text-align: left!important;
     display: block;
   }
 
