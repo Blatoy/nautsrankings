@@ -8,4 +8,4 @@ Use this website to check the Awesomenauts leaderboard online from anywhere! You
 This project uses jQuery
 
 # Credits
-Made by Blatoy from scratch, inspired by the first version of Nautsrankings made by Josh Medeiros and the in-game leaderboard.
+Made by Blatoy from scratch using [Marukyu's](https://github.com/Marukyu/) nauts leaderboard API, inspired by the first version of Nautsrankings made by Josh Medeiros and the in-game leaderboard.
