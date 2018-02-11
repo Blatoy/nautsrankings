@@ -6,7 +6,7 @@ var NautsRankings = new function() {
   this.init = function() {
     // Get and display the last rank update time
     queryAPI("get-update-time", false, function(data) {
-      $("#rank-update-time").text(secondsToReadableTime(data.result) + " ago");
+      $("#rank-update-time").text(secondsToReadableTime(data.result));
     });
 
     SearchController.init();
