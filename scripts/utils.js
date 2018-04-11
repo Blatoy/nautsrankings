@@ -18,16 +18,16 @@ function escapeHTML (string) {
 
 function secondsToReadableTime(seconds) {
   var minutes = Math.floor((seconds / 60) % 60);
-  var hours = Math.floor((minutes / 60) % 24);
-  var days = Math.floor(hours / 24);
+  var hours = Math.floor((seconds / 3600) % 24);
+  var days = Math.floor(seconds / 86400);
   var readableTime = "";
 
   if(minutes + hours + days == 0) {
     readableTime = "just now";
   }
   else {
-    readableTime += (days > 0) ? (d + " days") : "";
-    readableTime += (hours > 0) ? (hours + " hours") : "";
+    readableTime += (days > 0) ? (days + " days ") : "";
+    readableTime += (hours > 0) ? (hours + " hours ") : "";
     readableTime += (minutes > 0) ? (minutes + " minutes") : "";
     readableTime += " ago";
   }
