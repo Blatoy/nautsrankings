@@ -82,6 +82,7 @@ var LeaderboardView = new function() {
       tableContent +=
         "<tr>" +
           "<td><div><img style='float:left;' src='" + leagueImagePath +"'/> " + rank + "</div></td>" +
+          "<td><div><img style='float:left;' src='" + leagueImagePath +"'/> " + rank + "</div></td>" +
           "<td><a href='" + profileURL + "' target='_blank'>" + username + "</a></td>" +
           "<td>" + winRate + "%</td>" +
           "<td>" + seasonPlayed + "</td>" +

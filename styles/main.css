@@ -354,12 +354,10 @@ select, select option {
   }
 }
 
-
 @media (max-width: 900px) {
   #leaderboard-container table {
     width: 100%!important;
   }
-
 
   #about {
     font-size: 0.8em;

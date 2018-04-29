@@ -34,7 +34,8 @@ var SearchController = new function() {
       "leagueIds"  : urlData[1].split(""),
       "sortBy"      : urlData[2],
       "sortOrder"   : urlData[3],
-      "username"    : decodeURIComponent(urlData[4])
+      "username"    : decodeURIComponent(urlData[4]),
+      "country"     : decodeURIComponent(urlData[5])
     });
 
     self.setUseSearch(true);
@@ -44,10 +45,12 @@ var SearchController = new function() {
   this.reset = function() {
     searchParameters = {
       "username"  : "",
+      "country"  : "",
       "nautsIds"  : [],
       "leagueIds" : [],
       "sortBy"    : "rank",
-      "sortOrder" : "asc"
+      "sortOrder" : "asc",
+      "country"   : ""
     };
 
     userSearch = false;
