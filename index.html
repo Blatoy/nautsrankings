@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="/standalone/nautsrankings/images/favicon.png"/>
   <link rel="stylesheet" type="text/css" href="/standalone/nautsrankings/styles/main.css">
+  <meta property="og:title" content="Nautsrankings V2" />
+  <meta property="og:description" content="Online Awesomenauts leaderboards with a better search than in game." />
+  <meta name="theme-color" content="#F4F3F4">
 </head>
 <body>
   <!-- Loading displayed when searching -->
@@ -13,6 +17,7 @@
     <img src="/standalone/nautsrankings/images/loading.png"/>
     <div>Loading...</div>
   </div>
+  <div id="no-data" onclick="$(this).css('display', 'none');" style="display:none;top:1%; position:fixed;background-color:orange; width: 40%; z-index:9999; padding:10px; left:30%; cursor:pointer;">Nautsrankings host provider is running into somme issues preventing ranks update to finish properly, causing missing data. I'm going to work on a fix as soon as possible.</a></div>
 
   <!-- Top bar -->
   <div id="header">
@@ -50,6 +55,13 @@
       <select id="search-sorting-order">
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
+      </select>
+    </div>
+    <span class="search-title">Country</span><hr>
+    <div>
+      <select id="search-country">
+        <option value="">Any country</option>
+        <option value="--">Not specified</option>
       </select>
     </div>
 
@@ -94,7 +106,7 @@
   <script src="/standalone/nautsrankings/scripts/main.js"></script>
 
   <!-- Used to count visitors -->
-  <!--<iframe style="display:none;" src="https://orikaru.net/resources/logic/php/ajax/account.php"></iframe>-->
+  <iframe style="display:none;" src="https://orikaru.net/resources/logic/php/ajax/account.php"></iframe>
 
   <!-- Google Analytics  -->
   <script>

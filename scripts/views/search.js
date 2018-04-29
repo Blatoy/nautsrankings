@@ -7,6 +7,7 @@ var SearchView = new function() {
     this.setSearchBoxDisplay(false);
     this.addLeagueIconsToSearch();
     this.addNautIconsToSearch();
+    this.addCountryFlagsToSearch();
     this.addEvents();
     this.updateSearchParametersFromURL();
   }
@@ -66,7 +67,8 @@ var SearchView = new function() {
       "nautsIds": nautsIds,
       "leagueIds": leagueIds,
       "sortBy": $("#search-sort-type").val(),
-      "sortOrder": $("#search-sorting-order").val()
+      "sortOrder": $("#search-sorting-order").val(),
+      "country": $("#search-country").val()
     });
 
     self.setURL(SearchController.getSearchParameters());
@@ -89,6 +91,7 @@ var SearchView = new function() {
       url     +=  searchParameters.sortBy             + "/";
       url     +=  searchParameters.sortOrder          + "/";
       url     +=  encodeURIComponent(searchParameters.username) + "/";
+      url     +=  (searchParameters.country) + "/";
       setURLData(url);
   };
 
@@ -102,7 +105,6 @@ var SearchView = new function() {
     $("#search-naut-list .naut-icon").each(function(){
       for(var i = 0; i < urlData[0].length; ++i) {
         if($(this).data("naut-id") == urlData[0][i]) {
-          console.log("...");
           $(this).addClass("selected");
           break;
         }
@@ -120,6 +122,7 @@ var SearchView = new function() {
       // urlData[0].split("-"),
     //  "leaguesIds"  : urlData[1].split(""),
 
+    $("#search-country").val(urlData[5]);
     $("#search-sort-type").val(urlData[2]);
     $("#search-sorting-order").val(urlData[3]);
     $("#search-username").val(decodeURIComponent(urlData[4]));
@@ -156,6 +159,14 @@ var SearchView = new function() {
           );
         })(i, naut);
       }
+    }
+  };
+
+  // Add countries to select box
+  this.addCountryFlagsToSearch = function() {
+    // Add all nauts to the awesomenauts search
+    for(var k in COUNTRY_CODE_TO_NAME) {
+      $("#search-country").append("<option value='" + k + "'>" + COUNTRY_CODE_TO_NAME[k] + "</option>");
     }
   };
 
