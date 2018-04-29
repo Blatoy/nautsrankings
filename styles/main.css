@@ -344,7 +344,7 @@ select, select option {
   }
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1000px) {
   #about-copyright {
     display: none;
   }
@@ -354,14 +354,17 @@ select, select option {
   }
 }
 
-#about {
-  font-size: 0.8em;
-}
 
 @media (max-width: 900px) {
   #leaderboard-container table {
     width: 100%!important;
   }
+
+
+  #about {
+    font-size: 0.8em;
+  }
+
 
   #leaderboard-container td div {
     width: 85px;
