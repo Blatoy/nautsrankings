@@ -36,11 +36,12 @@ var NAUTS = [
   {"className": "Hyper",     "name": "Chucho"},
   {"className": "Shifter",   "name": "Ix"},
   {"className": "Warrior",   "name": "LUX"},
+  {"className": "Poacher",   "name": "Smiles"},
   {"className": "Rascal",    "name": "Dizzy"},
   {"className": "Boizor",    "name": "Max"},
   {"className": "Crumple",   "name": "Deadlift"},
-  {"className": "Poacher",   "name": "Smiles"},
   {"className": "Wakuwaku",  "name": "CMDR. Rocket."},
+  {"className": "Gantlet",   "name": "Qi'tara"},
   {"className": "Gladiator", "name": "Snork Gunk"}
 ];
 
