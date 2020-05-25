@@ -62,7 +62,7 @@ var LeaderboardView = new function() {
       var totalPlayed     = parseInt(row.totalLoss + row.totalWin);
       var seasonPlayed    = parseInt(row.seasonLoss + row.seasonWin);
       var winRate         = (100 * (row.seasonWin / seasonPlayed)).toFixed(2);
-      var username        = escapeHTML(row.username);
+      var username        = row.username === null ? '<span style="color: rgb(255, 40, 40);">Username not available yet</span>' : escapeHTML(row.username);
       var mainNautId      = escapeHTML(row.mainNautId);
       var rating          = escapeHTML(row.rating);
       var rank            = escapeHTML(row.rank);
