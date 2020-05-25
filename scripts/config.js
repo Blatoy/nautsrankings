@@ -41,7 +41,7 @@ var NAUTS = [
   {"className": "Crumple",   "name": "Deadlift"},
   {"className": "Poacher",   "name": "Smiles"},
   {"className": "Wakuwaku",  "name": "CMDR. Rocket."},
-  {"className": "Gantlet",   "name": "Qi'tara"}
+  {"className": "Gladiator", "name": "Snork Gunk"}
 ];
 
 var LEAGUES_FACTORS = [
