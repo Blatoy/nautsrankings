@@ -1,11 +1,12 @@
 nautsRankings.SearchView = class {
     constructor() {
-        this.setSearchBoxDisplay(false);
+        this.hideSearchBox();
         this.addLeagueIconsToSearch();
         this.addNautIconsToSearch();
         this.addCountryFlagsToSearch();
         this.addEvents();
         this.parseSearchParametersFromURL();
+        this._searchChanged = false;
     }
 
     addEvents() {
@@ -21,31 +22,58 @@ nautsRankings.SearchView = class {
             });
         });
 
-        // Display search on input focus, and "+" click
-        $("#search-username, #display-search-box").on("focusin click", () => {
-            this.setSearchBoxDisplay(true);
+        // Display search
+        document.getElementById("search-username").addEventListener("focusin", () => {
+            this.showSearchBox();
+        });
+        document.getElementById("display-search-box").addEventListener("click", () => {
+            this.showSearchBox();
         });
 
-        // Close on black background click or close button press
-        $("#search-box-background, #search-box-close").on("click", () => {
-            // TODO: Also add top banner (but not input)
-            this.setSearchBoxDisplay(false);
+        // Hide search
+        document.getElementById("search-box-close").addEventListener("click", () => {
+            this.hideSearchBox();
         });
 
-        // Search when pressing enter in input or search button press
-        $("#search-box-search").on("click", () => {
+        // Mark search as dirty if anything is touched
+        document.getElementById("search-box").addEventListener("click", () => {
+            this._searchChanged = true;
+        });
+
+        // Search is trigger in a lot of cases
+        document.getElementById("search-box-background").addEventListener("click", () => {
+            this.search();
+        });
+        document.getElementById("search-box-search").addEventListener("click", () => {
+            this.search();
+        });
+        document.getElementById("header").addEventListener("click", (e) => {
+            if (e.target.tagName !== "INPUT") {
             this.search(); 
+            }
         });
-        $("#search-username").on("keydown", (e) => {
+        document.getElementById("search-username").addEventListener("keydown", (e) => {
+
+
             if (e.keyCode === 13) {
-                // TODO: If escape close advanced search
                 this.search();
+            } else if (e.keyCode === 27) {
+                this.hideSearchBox();
+            } else {
+                this._searchChanged = true;
             }
         });
     }
 
     search() {
-        this.setSearchBoxDisplay(false);
+        this.hideSearchBox();
+
+        if (!this._searchChanged) {
+            return;
+        }
+
+        this._searchChanged = false;
+
         const nautsIds = [];
         const leagueIds = [];
 
@@ -168,9 +196,14 @@ nautsRankings.SearchView = class {
     }
 
     // Toggle search box display
-    setSearchBoxDisplay(display) {
-        setElementVisibility("#search-box", display);
-        setElementVisibility("#search-box-background", display);
+    showSearchBox() {
+        document.getElementById("search-box").classList.remove("hidden");
+        document.getElementById("search-box-background").classList.remove("hidden");
+    }
+
+    hideSearchBox() {
+        document.getElementById("search-box").classList.add("hidden");
+        document.getElementById("search-box-background").classList.add("hidden");
     }
 
 
