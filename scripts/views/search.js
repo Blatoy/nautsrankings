@@ -56,7 +56,7 @@ nautsRankings.SearchView = class {
             this.search();
         });
         document.getElementById("header").addEventListener("click", (e) => {
-            if (e.target.tagName !== "INPUT" && !document.getElementById("search-box").classList.contains("hidden")) {
+            if (e.target.tagName !== "SPAN" && e.target.tagName !== "INPUT" && !document.getElementById("search-box").classList.contains("hidden")) {
                 this.search();
             }
         });
