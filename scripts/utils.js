@@ -1,65 +1,77 @@
-// Source: https://stackoverflow.com/questions/24816/escaping-html-strings-with-jquery
-var entityMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;',
-  '`': '&#x60;',
-  '=': '&#x3D;'
+nautsRankings.Utils = class {
+    /**
+     * @param {number} rank 
+     * @returns league number (1 to 9) for the given player rank
+     */
+    static getLeagueNumberFromRank(rank, totalPlayerCount) {
+        const LEAGUES_FACTORS = nautsRankings.config.LEAGUES_FACTORS;
+        let leagueIndex = 0;
+        let playerCountInPreviousLeagues = 0;
+
+
+        while (rank > playerCountInPreviousLeagues && leagueIndex < LEAGUES_FACTORS.length) {
+            playerCountInPreviousLeagues += LEAGUES_FACTORS[leagueIndex] * totalPlayerCount;
+            leagueIndex++;
+        }
+
+        // Max 250 players in league 1
+        if (leagueIndex === 1 && rank > 250) {
+            return 2;
+        } else {
+            return leagueIndex;
+        }
+    }
+
+    static queryAPI(action, params) {
+        return new Promise((resolve) => {
+            $.get(nautsRankings.config.API_URL, { action: action, params: params }, resolve, "json");
+        });
+    }
+
+    // Source: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
+    static escapeHTML(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    static secondsToReadableTime(seconds) {
+        const minutes = Math.floor((seconds / 60) % 60);
+        const hours = Math.floor((seconds / 3600) % 24);
+        const days = Math.floor(seconds / 86400);
+        let readableTime = "";
+
+        if (minutes + hours + days === 0) {
+            readableTime = "just now";
+        } else {
+            readableTime += (days > 0) ? (days + " days ") : "";
+            readableTime += (hours > 0) ? (hours + " hours ") : "";
+            readableTime += (minutes > 0) ? (minutes + " minutes") : "";
+            readableTime += " ago";
+        }
+
+        return readableTime;
+    }
 };
 
-function escapeHTML (string) {
-  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-    return entityMap[s];
-  });
-}
-
-function secondsToReadableTime(seconds) {
-  var minutes = Math.floor((seconds / 60) % 60);
-  var hours = Math.floor((seconds / 3600) % 24);
-  var days = Math.floor(seconds / 86400);
-  var readableTime = "";
-
-  if(minutes + hours + days == 0) {
-    readableTime = "just now";
-  }
-  else {
-    readableTime += (days > 0) ? (days + " days ") : "";
-    readableTime += (hours > 0) ? (hours + " hours ") : "";
-    readableTime += (minutes > 0) ? (minutes + " minutes") : "";
-    readableTime += " ago";
-  }
-
-  return readableTime;
-}
 
 function setElementVisibility(selector, visibility) {
-  if(visibility) {
-    $(selector).show();
-  }
-  else {
-    $(selector).hide();
-  }
+    if (visibility) {
+        $(selector).show();
+    } else {
+        $(selector).hide();
+    }
 }
 
-function setURLData(hash) {
-  location.replace("#" + hash);
-}
 
 function getURLData() {
-  if(window.location.href.indexOf("#") != -1) {
-    return window.location.href.split("#")[1];
-  }
-
-  return false;
-}
-
-function queryAPI(action, params, callback) {
-  $.get(API_URL, {action: action, params: params}, function(data){
-    if(callback !== undefined) {
-      callback(data);
+    if (window.location.href.includes("#")) {
+        return window.location.href.split("#")[1];
     }
-  }, "json");
+
+    return false;
 }
+
