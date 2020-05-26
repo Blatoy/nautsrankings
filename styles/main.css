@@ -1,10 +1,10 @@
 @font-face {
-  font-family: ethnocentric;
+  font-family: "ethnocentric";
   src: url("/standalone/nautsrankings/fonts/ethnocentric.ttf");
 }
 
 @font-face {
-  font-family: zekton_rg;
+  font-family: "zekton_rg";
   src: url("/standalone/nautsrankings/fonts/zekton_rg.ttf");
 }
 
@@ -13,13 +13,15 @@ body {
   color: white;
   margin: 0 auto;
   text-align: center;
-  background: url("/standalone/nautsrankings/images/background.jpg") no-repeat center center fixed;
+  background: url("/standalone/nautsrankings/images/background.webp") no-repeat center center fixed;
 
   background-color: black;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+
+  box-sizing: border-box;
 }
 
 a, a:hover, a:visited, a:active{
@@ -123,11 +125,6 @@ input[type=button]:hover  {
   float: right;
 }
 
-#search-box label {
-  display: inline-block;
-  width: 200px;
-}
-
 .naut-icon, .league-icon {
   cursor: pointer;
   width: 50px;
@@ -229,13 +226,13 @@ input[type=button]:hover  {
 }
 
 #leaderboard-container td:nth-child(2n) {
-  background: url("/standalone/nautsrankings/images/leaderboard-background-even.png") center repeat-x;
-  background-size: auto 100%;
+  border-top: 1px solid rgba(5, 40, 40, 0.5);
+  background: linear-gradient(180deg, rgba(22,53,53,0.76) 0%, rgba(4,38,38,0.76) 100%);
 }
 
 #leaderboard-container td:nth-child(2n+1) {
-  background: url("/standalone/nautsrankings/images/leaderboard-background-odd.png") center repeat-x;
-  background-size: auto 100%;
+  border-top: 1px solid rgba(5, 40, 40, 0.5);
+  background: linear-gradient(180deg, rgba(15,35,35,0.76) 0%, rgba(2,25,25,0.76) 100%);
 }
 
 #no-result {
@@ -247,37 +244,6 @@ input[type=button]:hover  {
   margin-top: 10%;
   line-height: 100px;
 }
-
-/* NAVIGATION */
-#page-navigation {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding-top: 5px;
-  padding-bottom: 5px;
-
-  width: calc(80% + 1px);
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: -1px;
-  margin-bottom: 20px;
-}
-
-#page-navigation div {
-  display: inline-block;
-  width: 33%;
-}
-
-#page-navigation-prev {
-  text-align: left;
-}
-
-#page-navigation-count {
-  text-align: center;
-}
-
-#page-navigation-next {
-  text-align: right;
-}
-
 
 /* FOOTER */
 #about {
@@ -339,18 +305,6 @@ select, select option {
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
-@keyframes float {
-  0% {
-    transform: translatey(0px);
-  }
-  50% {
-    transform: translatey(-5px);
-  }
-  100% {
-    transform: translatey(0px);
-  }
-}
-
 @media (max-width: 1000px) {
   #about-copyright {
     display: none;
@@ -359,13 +313,7 @@ select, select option {
   #about-update-time {
     float: none!important;
   }
-}
 
-.hidden {
-  display: none;
-}
-
-@media (max-width: 900px) {
   #leaderboard-container table {
     width: 100%!important;
   }
@@ -401,18 +349,6 @@ select, select option {
     text-align: center;
   }
 
-  #search-box label {
-    display: block!important;
-    width: auto!important;
-    margin-top: 10px;
-    text-align: left;
-    margin-bottom: 5px;
-  }
-
-  #search-sort select {
-    width: 100%;
-  }
-
   .search-title, .search-title-first {
     text-align: left!important;
     display: block;
@@ -428,4 +364,9 @@ select, select option {
   #leaderboard-container th {
     position: unset;
   }
+}
+
+
+.hidden {
+  display: none;
 }

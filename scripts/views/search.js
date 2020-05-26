@@ -180,7 +180,7 @@ nautsRankings.SearchView = class {
     addLeagueIconsToSearch() {
         for (let i = 1; i < 10; ++i) {
             const img = new Image();
-            img.src = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + i + ".png";
+            img.src = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + i + ".webp";
             img.dataset.leagueId = i;
             img.classList.add("league-icon");
             img.addEventListener("click", () => {

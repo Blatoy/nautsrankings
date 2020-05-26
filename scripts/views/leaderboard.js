@@ -77,7 +77,7 @@ nautsRankings.LeaderboardView = class {
             const mainNautId = nautsRankings.Utils.escapeHTML(row.mainNautId);
             const rating = row.rating;
             const rank = row.rank;
-            const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + nautsRankings.Utils.getLeagueNumberFromRank(row.rank) + ".png";
+            const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + nautsRankings.Utils.getLeagueNumberFromRank(row.rank) + ".webp";
             const imagePath = nautsRankings.config.IMAGE_PATH + "nauts-icon/Classicon_" + this.getNautFromID(mainNautId).className + ".png";
             let countryCode = nautsRankings.Utils.escapeHTML(row.countryCode);
 
