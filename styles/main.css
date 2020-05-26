@@ -206,6 +206,7 @@ input[type=button]:hover  {
   padding: 10px;
   top: 0;
   position: sticky;
+  z-index: 1;
 }
 
 #leaderboard-container tr:not(:first-child):hover {
@@ -239,7 +240,6 @@ input[type=button]:hover  {
 
 #no-result {
   background-color: rgba(0, 0, 0, 0.8);
-  display: none;
   margin-left: auto;
   margin-right: auto;
 
