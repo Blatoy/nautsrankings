@@ -1,132 +1,134 @@
+const SEARCH_STATUS = { IDLE: 0, LOADING: 1, LOADED: 2, LOADED_NO_RESULTS: 3 };
+
 // Performs all query to the API
-var SearchController = new function() {
-  var self = this;
-  var SEARCH_STATUS = {IDLE: 0, LOADING: 1, LOADED: 2, LOADED_NO_RESULTS: 3};
+nautsRankings.SearchController = class {
+    constructor() {
+        this.pageNumber = 0;
+        this.searchStatus = SEARCH_STATUS.IDLE;
+        this.urlParameters = {};
+        this.usingSearch = false;
 
-  var pageNumber = 0, searchStatus = 0;
-  var searchParameters = {};
-  var useSearch = false;
-
-  // Reset search parameters and display 250 first players
-  this.init = function() {
-    this.reset();
-    this.updateSearchParametersFromURL();
-    // Get total player count for league calculation
-    queryAPI("get-user-count", {page: 0}, function(data) {
-      // Track user count for leagues icon display
-      NautsRankings.playerCount = data.result;
-      $("#result-count").text(data.result); // TODO: Don't do this in the controller
-      // Get 250 first players
-      self.getPlayersFromAPI(function(){
-        LeaderboardView.setLoadingDisplay(false);
-      });
-    });
-  };
-
-  this.updateSearchParametersFromURL = function() {
-    var urlData = getURLData();
-    if(!urlData) return;
-
-    // format: nautid-nautid-nautid/leagues/sortType/sortOrder/usernameEncoded
-    urlData = urlData.split("/");
-    this.updateSearchParameters({
-      "nautsIds"    : urlData[0] != "" ? urlData[0].split("-") : [],
-      "leagueIds"  : urlData[1].split(""),
-      "sortBy"      : urlData[2],
-      "sortOrder"   : urlData[3],
-      "username"    : decodeURIComponent(urlData[4]),
-      "country"     : decodeURIComponent(urlData[5])
-    });
-
-    self.setUseSearch(true);
-  };
-
-  // Reset search parameters
-  this.reset = function() {
-    searchParameters = {
-      "username"  : "",
-      "country"  : "",
-      "nautsIds"  : [],
-      "leagueIds" : [],
-      "sortBy"    : "rank",
-      "sortOrder" : "asc",
-      "country"   : ""
-    };
-
-    userSearch = false;
-    preventAPIQuery = false;
-    pageNumber = 0, searchStatus = SEARCH_STATUS.IDLE;
-  };
-
-  // Called before reaching the bottom of the page
-  this.incrementPageNumber = function() {
-    if(searchStatus == SEARCH_STATUS.IDLE  || searchStatus == SEARCH_STATUS.LOADED) {
-        pageNumber++;
-    }
-  };
-
-  // Reset page number and page status to allow new queries
-  this.resetPageNumber = function() {
-    pageNumber = 0;
-    searchStatus = SEARCH_STATUS.IDLE;
-  };
-
-  // Set searchParameters
-  this.updateSearchParameters = function(searchParameters_) {
-    // Only update specified parameters
-    for(var k in searchParameters_) {
-      searchParameters[k] = searchParameters_[k];
-    }
-  };
-
-  this.getSearchParameters = function() {
-    return searchParameters;
-  };
-
-  // Get a list of all players matching searchParameters and add them to the leadeboard
-  this.getPlayersFromAPI = function(callback) {
-    // Prevent spamming the API for nothing
-    if(searchStatus != SEARCH_STATUS.IDLE && searchStatus != SEARCH_STATUS.LOADED) {
-      return;
+        // Reset search parameters and display 250 first players
+        this.reset();
+        this.parseSearchParametersFromURL();
+        this.queryPlayerCount();
     }
 
-    // "Loading mode"
-    searchStatus = SEARCH_STATUS.LOADING;
-
-    // "get-all" is way faster than search
-    var action = useSearch ? "search" : "get-all";
-
-    queryAPI(action, {page: pageNumber, settings: searchParameters}, function(data){
-      handleAPIResults(data.result);
-      if(callback !== undefined) callback();
-    });
-  };
-
-    // When useSearch is set to false, use "get-all" and effectively prevent to make any query
-  this.setUseSearch = function(useSearch_) {
-    useSearch = useSearch_;
-  };
-
-  // Display result / no results
-  var handleAPIResults = function(results) {
-    if(results.length > 0) {
-      // Append results to the leadeboard
-      searchStatus = SEARCH_STATUS.LOADED;
-      LeaderboardView.addResults(results);
-      // TODO: Don't do this in the controller
-      if(useSearch) {
-        $("#result-count").text(results.length + (results.length == 250 ? "+" : ""));
-      }
-      else {
-        $("#result-count").text(NautsRankings.playerCount);
-      }
+    /**
+     * Get total player count for league calculation
+     */
+    queryPlayerCount() {
+        nautsRankings.Utils.queryAPI("get-user-count", { page: 0 }).then((data) => {
+            // Track user count for leagues icon display
+            nautsRankings.playerCount = data.result;
+            $("#result-count").text(data.result); // TODO: Don't do this in the controller
+            // Get 250 first players
+            this.loadPlayersFromAPI().then(() => {
+                nautsRankings.leaderboardView.setLoadingDisplay(false);
+            });
+        });
     }
-    else {
-      // Reached the end, prevent news query
-      if(pageNumber == 0) {
-        LeaderboardView.setNoResultDisplay(true);
-      }
-      searchStatus = SEARCH_STATUS.LOADED_NO_RESULTS;
+
+
+    /**
+     * Read content after the hash and set search parameters from it
+     * format: nautid-nautid-nautid/leagues/sortType/sortOrder/usernameEncoded
+     */
+    parseSearchParametersFromURL() {
+        const urlData = getURLData();
+        if (typeof (urlData) !== "string") {
+            return;
+        }
+
+        const urlParameters = urlData.split("/");
+        if (urlParameters.length >= 6) {
+            this.searchParameters = {
+                nautsIds: urlParameters[0] !== "" ? urlParameters[0].split("-") : [],
+                leagueIds: urlParameters[1].split(""),
+                sortBy: urlParameters[2],
+                sortOrder: urlParameters[3],
+                username: decodeURIComponent(urlParameters[4]),
+                country: decodeURIComponent(urlParameters[5])
+            };
+
+            this.usingSearch = true;
+        }
     }
-  };
-}
+
+    /**
+     * Reset all search parameters
+     */
+    reset() {
+        this.searchParameters = {
+            "username": "",
+            "nautsIds": [],
+            "leagueIds": [],
+            "sortBy": "rank",
+            "sortOrder": "asc",
+            "country": ""
+        };
+
+        this.searchStatus = SEARCH_STATUS.IDLE;
+        this.usingSearch = false;
+        this.pageNumber = 0;
+    }
+
+    /**
+   * Called before reaching the bottom of the page
+   */
+    incrementPageNumber() {
+        if (this.searchStatus === SEARCH_STATUS.IDLE || this.searchStatus === SEARCH_STATUS.LOADED) {
+            this.pageNumber++;
+        }
+    }
+
+    /**
+   * Reset page number and page status to allow new queries 
+   */
+    resetPageNumber() {
+        this.pageNumber = 0;
+        this.searchStatus = SEARCH_STATUS.IDLE;
+    }
+
+    /**
+   * Get a list of all players matching searchParameters and add them to the leadeboard
+   */
+    loadPlayersFromAPI() {
+        return new Promise((resolve) => {
+            // Prevent spamming the API for nothing
+            if (this.searchStatus !== SEARCH_STATUS.IDLE && this.searchStatus !== SEARCH_STATUS.LOADED) {
+                resolve(false);
+            } else {
+                this.searchStatus = SEARCH_STATUS.LOADING;
+
+                // "get-all" is way faster than searching for nothing
+                const action = this.usingSearch ? "search" : "get-all";
+
+                nautsRankings.Utils.queryAPI(action, { page: this.pageNumber, settings: this.searchParameters }).then((data) => {
+                    const results = data.result;
+
+                    if (results.length > 0) {
+                        this.searchStatus = SEARCH_STATUS.LOADED;
+                        // Append results to the leadeboard
+                        nautsRankings.leaderboardView.addResults(results);
+                        // TODO: Don't do this in the controller
+                        if (this.usingSearch) {
+                            $("#result-count").text(results.length + (results.length === 250 ? "+" : ""));
+                        } else {
+                            $("#result-count").text(nautsRankings.playerCount);
+                        }
+                    } else {
+                        this.searchStatus = SEARCH_STATUS.LOADED_NO_RESULTS;
+
+                        // Reached the end, prevent news query
+                        if (this.pageNumber === 0) {
+                            nautsRankings.leaderboardView.setNoResultDisplay(true);
+                        }
+                    }
+
+                    resolve();
+                });
+            }
+        });
+    }
+};

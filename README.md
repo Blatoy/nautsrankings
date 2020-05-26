@@ -1,8 +1,10 @@
 # Nautsrankings V2
 Use this website to check the Awesomenauts leaderboard online from anywhere! You can find a live version at https://orikaru.net/nautsrankings
 
-# About the API
-// TODO
+# About this code
+This codebase is *very* old and it would be probably faster to rewrite it from scratch at this point.
+
+If you want to run it locally, place the code source into a ./standalone/nautsrankings and serve it using any web server.
 
 # Libraries
 This project uses jQuery

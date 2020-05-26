@@ -1,23 +1,13 @@
-// "Entry point" of the program, init views and controllers
-var NautsRankings = new function() {
-  var self = this;
-  this.playerCount = -1;
+window.nautsRankings = {};
 
-  this.init = function() {
-    // Get and display the last rank update time
-    queryAPI("get-update-time", false, function(data) {
-      $("#rank-update-time").text(secondsToReadableTime(data.result));
+window.addEventListener("load", () => {
+    nautsRankings.searchController = new nautsRankings.SearchController();
+    nautsRankings.searchView = new nautsRankings.SearchView();
+    nautsRankings.leaderboardView = new nautsRankings.LeaderboardView();
+    nautsRankings.playerCount = -1;
+
+    nautsRankings.Utils.queryAPI("get-update-time", false).then((data) => {
+        $("#rank-update-time").text(nautsRankings.Utils.secondsToReadableTime(data.result));
+    // $("#rank-update-time").text("Latest season not available at the moment");
     });
-
-    SearchController.init();
-    SearchView.init();
-    LeaderboardView.init();
-  };
-
-  // Return naut information from its id (see config.js)
-  this.getNautFromID = function(id) {
-    return NAUTS[id] ? NAUTS[id] : NAUTS[0];
-  };
-};
-
-NautsRankings.init();
+});
