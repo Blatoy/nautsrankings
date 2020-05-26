@@ -126,8 +126,11 @@ nautsRankings.SearchView = class {
 
     // Reset search display to its default values
     reset() {
-        $(".selected").removeClass("selected");
-        $("#search-username").val("");
+        document.getElementById("search-sort-type").selectedIndex = 0;
+        document.getElementById("search-sorting-order").selectedIndex = 0;
+        document.getElementById("search-country").selectedIndex = 0;
+        document.querySelectorAll(".selected").forEach(e => e.classList.remove("selected"));
+        document.getElementById("search-username").value = "";
         location.replace("#");
     }
 
