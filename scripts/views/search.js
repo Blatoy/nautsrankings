@@ -170,10 +170,10 @@ nautsRankings.SearchView = class {
         // urlData[0].split("-"),
         //  "leaguesIds"  : urlData[1].split(""),
 
-        document.getElementById("#search-country").value = urlData[5];
-        document.getElementById("#search-sort-type").value = urlData[2];
-        document.getElementById("#search-sorting-order").value = urlData[3];
-        document.getElementById("#search-username").value = decodeURIComponent(urlData[4]);
+        document.getElementById("search-country").value = urlData[5];
+        document.getElementById("search-sort-type").value = urlData[2];
+        document.getElementById("search-sorting-order").value = urlData[3];
+        document.getElementById("search-username").value = decodeURIComponent(urlData[4]);
     }
 
     // Add leagues icon to the search-box

@@ -31,7 +31,27 @@ nautsRankings.Utils = class {
         
         let urlParams = "";
         for (const k in params) {
-            urlParams += encodeURI("&params[" + k + "]=" + params[k]);
+            if (typeof params[k] === "object") {
+                // TODO: Write recursive function OR just pass using body and fix php api
+                for (const i in params[k]) {
+                    if (Array.isArray(params[k][i])) {
+                        for (let j = 0; j < params[k][i].length; j++) {
+                            const value = params[k][i][j];
+                            if (value !== undefined && value !== "") {
+                                urlParams += encodeURI("&params[" + k + "][" + i + "][]=" + value);
+                            }
+                        }
+                    } else {
+                        if (params[k][i] !== undefined && params[k][i] !== "") {
+                            urlParams += encodeURI("&params[" + k + "][" + i + "]=" + params[k][i]);
+                        }
+                    }
+                }
+            } else {
+                if (params[k] !== undefined && params[k] !== "") {
+                    urlParams += encodeURI("&params[" + k + "]=" + params[k]);
+                }
+            }
         }
 
         const request = {
