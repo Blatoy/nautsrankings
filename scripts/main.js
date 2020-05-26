@@ -7,7 +7,13 @@ window.addEventListener("load", () => {
     nautsRankings.playerCount = -1;
 
     nautsRankings.Utils.queryAPI("get-update-time", false).then((data) => {
-        $("#rank-update-time").text(nautsRankings.Utils.secondsToReadableTime(data.result));
-    // $("#rank-update-time").text("Latest season not available at the moment");
+        document.getElementById("rank-update-time").textContent = nautsRankings.Utils.secondsToReadableTime(data.result);
+    });
+
+    document.getElementById("about-nautsrankings").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("about-nautsrankings").classList.add("hidden");
+        document.getElementById("about-update-time").classList.add("hidden");
+        document.getElementById("about-desc").classList.remove("hidden");
     });
 });

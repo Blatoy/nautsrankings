@@ -9,17 +9,24 @@ nautsRankings.SearchView = class {
         this._searchChanged = false;
     }
 
-    addEvents() {
-    // Reset everything on logo click
-        $("#logo, #search-box-reset").on("click", () => {
-            nautsRankings.leaderboardView.setLoadingDisplay(true);
-            nautsRankings.leaderboardView.clearTable();
-            nautsRankings.searchController.reset();
-            this.reset();
+    _resetSearch() {
+        nautsRankings.leaderboardView.showLoading();
+        nautsRankings.leaderboardView.clearTable();
+        nautsRankings.searchController.reset();
+        this.reset();
 
-            nautsRankings.searchController.loadPlayersFromAPI().then(() => {
-                nautsRankings.leaderboardView.setLoadingDisplay(false);
-            });
+        nautsRankings.searchController.loadPlayersFromAPI().then(() => {
+            nautsRankings.leaderboardView.hideLoading(false);
+        });
+    }
+
+    addEvents() {
+        // Reset
+        document.getElementById("logo").addEventListener("click", () => {
+            this._resetSearch();
+        });
+        document.getElementById("search-box-reset").addEventListener("click", () => {
+            this._resetSearch();
         });
 
         // Display search
@@ -45,16 +52,15 @@ nautsRankings.SearchView = class {
             this.search();
         });
         document.getElementById("search-box-search").addEventListener("click", () => {
+            this._searchChanged = true;
             this.search();
         });
         document.getElementById("header").addEventListener("click", (e) => {
-            if (e.target.tagName !== "INPUT") {
-            this.search(); 
+            if (e.target.tagName !== "INPUT" && !document.getElementById("search-box").classList.contains("hidden")) {
+                this.search();
             }
         });
         document.getElementById("search-username").addEventListener("keydown", (e) => {
-
-
             if (e.keyCode === 13) {
                 this.search();
             } else if (e.keyCode === 27) {
@@ -78,37 +84,37 @@ nautsRankings.SearchView = class {
         const leagueIds = [];
 
         // Get selected nauts
-        $("#search-naut-list .selected").each(function () {
-            nautsIds.push($(this).data("naut-id"));
+        document.querySelectorAll("#search-naut-list .selected").forEach((e) => {
+            nautsIds.push(e.dataset.nautId);
         });
 
         // Get selected leagues
-        $("#search-league-list .selected").each(function () {
-            leagueIds.push($(this).data("league-id"));
+        document.querySelectorAll("#search-league-list .selected").forEach((e) => {
+            leagueIds.push(e.dataset.leagueId);
         });
 
         // Notify the controller to use custom search
         nautsRankings.searchController.usingSearch = true;
         // Update all search parameters
         nautsRankings.searchController.searchParameters = {
-            "username": $("#search-username").val(),
+            "username": document.getElementById("search-username").value,
             "nautsIds": nautsIds,
             "leagueIds": leagueIds,
-            "sortBy": $("#search-sort-type").val(),
-            "sortOrder": $("#search-sorting-order").val(),
-            "country": $("#search-country").val()
+            "sortBy":document.getElementById("search-sort-type").value,
+            "sortOrder": document.getElementById("search-sorting-order").value,
+            "country": document.getElementById("search-country").value
         };
 
         this.setURL(nautsRankings.searchController.searchParameters);
 
         // "Loading mode"
         nautsRankings.leaderboardView.clearTable();
-        nautsRankings.leaderboardView.setLoadingDisplay(true);
-        nautsRankings.leaderboardView.setNoResultDisplay(false);
+        nautsRankings.leaderboardView.showLoading();
+        nautsRankings.leaderboardView.hideNoResults();
         // Reset current page number and query API
         nautsRankings.searchController.resetPageNumber();
         nautsRankings.searchController.loadPlayersFromAPI().then(() => {
-            nautsRankings.leaderboardView.setLoadingDisplay(false);
+            nautsRankings.leaderboardView.hideLoading();
         });
     }
 
@@ -150,52 +156,47 @@ nautsRankings.SearchView = class {
         }
 
         urlData[0] = urlData[0].split("-");
-        $("#search-naut-list .naut-icon").each(function () {
-            for (let i = 0; i < urlData[0].length; ++i) {
-                if ($(this).data("naut-id") === urlData[0][i]) {
-                    $(this).addClass("selected");
-                    break;
-                }
+        document.querySelectorAll("#search-naut-list .naut-icon").forEach((e) => {
+            if (urlData[0].includes(e.dataset.nautId)) {
+                e.classList.add("selected");
             }
         });
 
-        $("#search-league-list .league-icon").each(function () {
-            for (let i = 0; i < urlData[1].length; ++i) {
-                if ($(this).data("league-id") === urlData[1][i]) {
-                    $(this).addClass("selected");
-                    break;
-                }
+        document.querySelectorAll("#search-league-list .league-icon").forEach((e) => {
+            if (urlData[1].includes(e.dataset.leagueId)) {
+                e.classList.add("selected");
             }
         });
         // urlData[0].split("-"),
         //  "leaguesIds"  : urlData[1].split(""),
 
-        $("#search-country").val(urlData[5]);
-        $("#search-sort-type").val(urlData[2]);
-        $("#search-sorting-order").val(urlData[3]);
-        $("#search-username").val(decodeURIComponent(urlData[4]));
+        document.getElementById("#search-country").value = urlData[5];
+        document.getElementById("#search-sort-type").value = urlData[2];
+        document.getElementById("#search-sorting-order").value = urlData[3];
+        document.getElementById("#search-username").value = decodeURIComponent(urlData[4]);
     }
 
     // Add leagues icon to the search-box
     addLeagueIconsToSearch() {
         for (let i = 1; i < 10; ++i) {
-            $("#search-league-list").append(
-                $("<img>")
-                    .attr("src", nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + i + ".png")
-                    .addClass("league-icon")
-                    .data("league-id", i)
-                    .on("click", function () {
-                        $(this).toggleClass("selected");
-                    })
-            );
+            const img = new Image();
+            img.src = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + i + ".png";
+            img.dataset.leagueId = i;
+            img.classList.add("league-icon");
+            img.addEventListener("click", () => {
+                img.classList.toggle("selected");
+            });
+            document.getElementById("search-league-list").append(img);
         }
     }
 
     // Add countries to select box
     addCountryFlagsToSearch() {
+        let countryList = "";
         for (const countryCode in nautsRankings.config.COUNTRY_CODE_TO_NAME) {
-            $("#search-country").append("<option value='" + countryCode + "'>" + nautsRankings.config.COUNTRY_CODE_TO_NAME[countryCode] + "</option>");
+            countryList += "<option value='" + countryCode + "'>" + nautsRankings.config.COUNTRY_CODE_TO_NAME[countryCode] + "</option>";
         }
+        document.getElementById("search-country").innerHTML += countryList;
     }
 
     // Toggle search box display
@@ -216,15 +217,14 @@ nautsRankings.SearchView = class {
         for (let i = 0; i < nautsRankings.config.NAUTS.length; ++i) {
             const naut = nautsRankings.config.NAUTS[i];
             if (!naut.hide) {
-                $("#search-naut-list").append(
-                    $("<img>")
-                        .attr("src", nautsRankings.config.IMAGE_PATH + "/nauts-icon/Classicon_" + naut.className + ".png")
-                        .addClass("naut-icon")
-                        .data("naut-id", i)
-                        .on("click", function () {
-                            $(this).toggleClass("selected");
-                        })
-                );
+                const img = new Image();
+                img.src = nautsRankings.config.IMAGE_PATH + "/nauts-icon/Classicon_" + naut.className + ".png";
+                img.classList.add("naut-icon");
+                img.dataset.nautId = i;
+                img.addEventListener("click", () => {
+                    img.classList.toggle("selected");
+                });
+                document.getElementById("search-naut-list").append(img);
             }
         }
     }

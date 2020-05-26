@@ -2,15 +2,16 @@ const RELOAD_HEIGHT = 2000;
 
 nautsRankings.LeaderboardView = class {
     constructor() {
-        this.setNoResultDisplay(false);
-        this._addTableHeaders();
+        this.hideNoResults();
         this._addEvents();
+        this._hasHeaders = false;
     }
 
     _addEvents() {
     // Auto-reload page when reaching page bottom
-        $("#content-container").on("scroll", () => {
-            if ($("#content-container").scrollTop() + $("#content-container").height() > $("#content-container").prop("scrollHeight") - RELOAD_HEIGHT) {
+        const contentContainer = document.getElementById("content-container"); 
+        contentContainer.addEventListener("scroll", () => {
+            if (contentContainer.scrollTop + contentContainer.offsetHeight > contentContainer.scrollHeight - RELOAD_HEIGHT) {
                 nautsRankings.searchController.incrementPageNumber();
                 nautsRankings.searchController.loadPlayersFromAPI();
             }
@@ -18,37 +19,54 @@ nautsRankings.LeaderboardView = class {
     }
 
     _addTableHeaders() {
-        $("#leaderboard").append(
-            "<tr>" +
-      "<th>Rank</th>" +
-      "<th>Username</th>" +
-      "<th>Win%</th>" +
-      "<th>Played</th>" +
-      "<th>Played all time</th>" +
-      "<th>Favourite</th>" +
-      "<th>Rating</th>" +
-      "<th>Country</th>" +
-      "</tr>"
-        );
+        if (!this._hasHeaders) {
+            this._hasHeaders = true;
+
+            document.getElementById("leaderboard").getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend",
+                "<tr>" +
+            "<th>Rank</th>" +
+            "<th>Username</th>" +
+            "<th>Win%</th>" +
+            "<th>Played</th>" +
+            "<th>Played all time</th>" +
+            "<th>Favourite</th>" +
+            "<th>Rating</th>" +
+            "<th>Country</th>" +
+            "</tr>"
+            );
+        }
     }
 
     // Clear table content and add headers
     clearTable() {
-        $("#leaderboard tr").remove();
-        this._addTableHeaders();
+        this._hasHeaders = false;
+        document.querySelector("#leaderboard").innerHTML = "<tbody></tbody>";
     }
 
-    setLoadingDisplay(display) {
-        setElementVisibility("#loading", display);
+    hideLoading() {
+        document.getElementById("loading").classList.add("hidden");
+    }
+    
+    showLoading() {
+        document.getElementById("loading").classList.remove("hidden");
     }
 
-    setNoResultDisplay(display) {
-        setElementVisibility("#no-result", display);
+    hideNoResults() {
+        document.getElementById("no-result").classList.add("hidden");
     }
+
+    showNoResults() {
+        document.getElementById("no-result").classList.remove("hidden");
+    }
+
 
     // Add a list of results to the leaderboard
     addResults(results) {
+        this._addTableHeaders();
         let tableContent = "";
+
+        nautsRankings.Utils.computeLeaguesBoundaries(nautsRankings.playerCount);
+
         for (let i = 0; i < results.length; ++i) {
             const row = results[i];
             const profileURL = nautsRankings.config.STEAM_PROFILE_URL + nautsRankings.Utils.escapeHTML(row.steamId);
@@ -59,7 +77,7 @@ nautsRankings.LeaderboardView = class {
             const mainNautId = nautsRankings.Utils.escapeHTML(row.mainNautId);
             const rating = row.rating;
             const rank = row.rank;
-            const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + nautsRankings.Utils.getLeagueNumberFromRank(row.rank, nautsRankings.playerCount) + ".png";
+            const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + nautsRankings.Utils.getLeagueNumberFromRank(row.rank) + ".png";
             const imagePath = nautsRankings.config.IMAGE_PATH + "nauts-icon/Classicon_" + this.getNautFromID(mainNautId).className + ".png";
             let countryCode = nautsRankings.Utils.escapeHTML(row.countryCode);
 
@@ -85,7 +103,7 @@ nautsRankings.LeaderboardView = class {
         }
 
         // Append everything to the table in one time because it's faster
-        $("#leaderboard").append(tableContent);
+        document.getElementById("leaderboard").getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", tableContent);
     }
 
     // Return naut information from its id (see config.js)

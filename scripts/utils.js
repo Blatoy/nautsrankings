@@ -1,31 +1,49 @@
+nautsRankings.leagueBoundaries = [];
 nautsRankings.Utils = class {
+    static computeLeaguesBoundaries(totalPlayerCount) {
+        const LEAGUES_FACTORS = nautsRankings.config.LEAGUES_FACTORS;
+
+        nautsRankings.leagueBoundaries = [];
+        for (let i = 0; i < LEAGUES_FACTORS.length; i++) {
+            nautsRankings.leagueBoundaries.push(LEAGUES_FACTORS[i] * totalPlayerCount);
+        }
+
+        // L1 is limited to 250
+        nautsRankings.leagueBoundaries[0] = Math.min(250, nautsRankings.leagueBoundaries[0]);
+    }
+
     /**
      * @param {number} rank 
-     * @returns league number (1 to 9) for the given player rank
      */
-    static getLeagueNumberFromRank(rank, totalPlayerCount) {
-        const LEAGUES_FACTORS = nautsRankings.config.LEAGUES_FACTORS;
+    static getLeagueNumberFromRank(rank) {
         let leagueIndex = 0;
-        let playerCountInPreviousLeagues = 0;
 
-
-        while (rank > playerCountInPreviousLeagues && leagueIndex < LEAGUES_FACTORS.length) {
-            playerCountInPreviousLeagues += LEAGUES_FACTORS[leagueIndex] * totalPlayerCount;
+        // We could go reverse since statistically there are more L9, but L1 is what is loaded first
+        while (rank > nautsRankings.leagueBoundaries[leagueIndex]) {
             leagueIndex++;
         }
 
-        // Max 250 players in league 1
-        if (leagueIndex === 1 && rank > 250) {
-            return 2;
-        } else {
-            return leagueIndex;
-        }
+        return leagueIndex + 1;
     }
 
-    static queryAPI(action, params) {
-        return new Promise((resolve) => {
-            $.get(nautsRankings.config.API_URL, { action: action, params: params }, resolve, "json");
-        });
+    static async queryAPI(action, params) {
+        let url = nautsRankings.config.API_URL;
+        
+        let urlParams = "";
+        for (const k in params) {
+            urlParams += encodeURI("&params[" + k + "]=" + params[k]);
+        }
+
+        const request = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+        };
+
+        url += "?action=" + action + urlParams;
+
+        const response = await fetch(url, request);
+        return await response.json();
     }
 
     // Source: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
@@ -56,16 +74,6 @@ nautsRankings.Utils = class {
         return readableTime;
     }
 };
-
-
-function setElementVisibility(selector, visibility) {
-    if (visibility) {
-        $(selector).show();
-    } else {
-        $(selector).hide();
-    }
-}
-
 
 function getURLData() {
     if (window.location.href.includes("#")) {

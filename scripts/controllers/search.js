@@ -21,10 +21,10 @@ nautsRankings.SearchController = class {
         nautsRankings.Utils.queryAPI("get-user-count", { page: 0 }).then((data) => {
             // Track user count for leagues icon display
             nautsRankings.playerCount = data.result;
-            $("#result-count").text(data.result); // TODO: Don't do this in the controller
+            document.getElementById("result-count").textContent = data.result; // TODO: Don't do this in the controller
             // Get 250 first players
             this.loadPlayersFromAPI().then(() => {
-                nautsRankings.leaderboardView.setLoadingDisplay(false);
+                nautsRankings.leaderboardView.hideLoading(false);
             });
         });
     }
@@ -113,16 +113,16 @@ nautsRankings.SearchController = class {
                         nautsRankings.leaderboardView.addResults(results);
                         // TODO: Don't do this in the controller
                         if (this.usingSearch) {
-                            $("#result-count").text(results.length + (results.length === 250 ? "+" : ""));
+                            document.getElementById("result-count").textContent = results.length + (results.length === 250 ? "+" : "");
                         } else {
-                            $("#result-count").text(nautsRankings.playerCount);
+                            document.getElementById("result-count").textContent = nautsRankings.playerCount;
                         }
                     } else {
                         this.searchStatus = SEARCH_STATUS.LOADED_NO_RESULTS;
 
                         // Reached the end, prevent news query
                         if (this.pageNumber === 0) {
-                            nautsRankings.leaderboardView.setNoResultDisplay(true);
+                            nautsRankings.leaderboardView.showNoResults();
                         }
                     }
 

@@ -6,8 +6,5 @@ This codebase is *very* old and it would be probably faster to rewrite it from s
 
 If you want to run it locally, place the code source into a ./standalone/nautsrankings and serve it using any web server.
 
-# Libraries
-This project uses jQuery
-
 # Credits
 Made by Blatoy from scratch using [Marukyu's](https://github.com/Marukyu/) nauts leaderboard API, inspired by the first version of Nautsrankings made by Josh Medeiros and the in-game leaderboard.

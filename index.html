@@ -17,7 +17,6 @@
     <img src="/standalone/nautsrankings/images/loading.png"/>
     <div>Loading...</div>
   </div>
-  <div id="no-data" onclick="$(this).css('display', 'none');" style="display:none;top:1%; position:fixed;background-color:orange; width: 40%; z-index:9999; padding:10px; left:30%; cursor:pointer;">Nautsrankings host provider is running into somme issues preventing ranks update to finish properly, causing missing data. I'm going to work on a fix as soon as possible.</a></div>
 
   <!-- Top bar -->
   <div id="header">
@@ -87,15 +86,14 @@
 <!-- About and last resfreshed time -->
 <div id="about">
   <span id="about-copyright">
-    <a onclick="$('#about-desc').show(); $(this).hide(); $('#about-update-time').hide();" href="#">About Nautsrankings</a>
-    <span style="display: none;" id="about-desc">
+    <a id="about-nautsrankings" href="#">About Nautsrankings</a>
+    <span class="hidden" id="about-desc">
       Made by <a href="http://steamcommunity.com/id/Blatoy/">Blatoy</a> with the help of <a href="https://github.com/Marukyu">Marukyu</a> and his awesome API. Inspired by Josh Medeiros's old Nautsrankings.
       <a href="/donate">Donations</a> welcome!</span>
     </span>
     <div id="about-update-time">Players found: <b><span id="result-count">0</span></b> - Ranks updated <b><span id="rank-update-time"></span></b></div>
   </div>
 
-  <script src="/standalone/nautsrankings/scripts/jquery.min.js"></script>
   <script src="/standalone/nautsrankings/scripts/main.js"></script>
   <script src="/standalone/nautsrankings/scripts/config.js"></script>
   <script src="/standalone/nautsrankings/scripts/utils.js"></script>
