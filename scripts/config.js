@@ -22,9 +22,9 @@ nautsRankings.config.NAUTS = [
     {className: "Maw", name: "Gnaw"},
     {className: "Wozzle", name: "Rocco"},
     {className: "Vampire", name: "Ayla"},
-    {className: "None", name: "Disconnect", hide: false}, // When players leave a match before playing any game
+    {className: "Unknown", name: "Unknown ?", hide: true}, // Unused ID
     {className: "Bird", name: "Vinnie"},
-    {className: "Unknown", name: "Unknown", hide: true}, // Unused ID ?
+    {className: "None", name: "Disconnected before playing one game", hide: false}, // When players leave a match before playing any game
     {className: "Butterfly", name: "Genji"},
     {className: "Assassin", name: "Penny"},
     {className: "Captain", name: "Swiggins"},
