@@ -69,7 +69,7 @@ nautsRankings.LeaderboardView = class {
 
         for (let i = 0; i < results.length; ++i) {
             const row = results[i];
-            const profileURL = nautsRankings.config.STEAM_PROFILE_URL + nautsRankings.Utils.escapeHTML(row.steamId);
+            const profileURL = nautsRankings.config.STEAM_PROFILE_URL + nautsRankings.Utils.escapeHTML(String(row.steamId));
             const totalPlayed = parseInt(row.totalLoss + row.totalWin);
             const seasonPlayed = parseInt(row.seasonLoss + row.seasonWin);
             const winRate = (100 * (row.seasonWin / seasonPlayed)).toFixed(2);
@@ -79,7 +79,7 @@ nautsRankings.LeaderboardView = class {
             const rank = row.rank;
             const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + nautsRankings.Utils.getLeagueNumberFromRank(row.rank) + ".webp";
             const imagePath = nautsRankings.config.IMAGE_PATH + "nauts-icon/Classicon_" + this.getNautFromID(mainNautId).className + ".png";
-            let countryCode = nautsRankings.Utils.escapeHTML(row.countryCode);
+            let countryCode = nautsRankings.Utils.escapeHTML(String(row.countryCode));
 
             // Set country code to flag image if it's set
             if (countryCode && countryCode.length === 2) {
