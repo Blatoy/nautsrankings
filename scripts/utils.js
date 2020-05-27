@@ -60,7 +60,7 @@ nautsRankings.Utils = class {
             cache: "no-cache",
         };
 
-        url += "?action=" + action + urlParams;
+        url += "?action=" + action + "&seasonId=" + nautsRankings.seasonId + urlParams;
 
         const response = await fetch(url, request);
         return await response.json();

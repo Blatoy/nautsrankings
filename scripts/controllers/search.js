@@ -11,7 +11,39 @@ nautsRankings.SearchController = class {
         // Reset search parameters and display 250 first players
         this.reset();
         this.parseSearchParametersFromURL();
+        this.queryLeagues().then(() => {
+            this.queryPlayerCount();
+        });
+    }
+
+    changeSeason(seasonId) {
+        nautsRankings.seasonId = seasonId;
+        nautsRankings.leaderboardView.clearTable();
+        this.reset();
+        this.parseSearchParametersFromURL();
         this.queryPlayerCount();
+    }
+
+    queryLeagues() {
+        return new Promise((resolve, reject) => {
+            nautsRankings.Utils.queryAPI("get-seasons", { page: 0 }).then((data) => {
+                for (let i = 0; i < data.result.length; i++) {
+                    const season = data.result[i];
+                    const option = document.createElement("option");
+                    option.textContent = season.displayName + (season.active === "1" ? " (current)" : "");
+                    option.value = season.seasonId;
+            
+                    document.getElementById("season-selector").append(option);
+                }
+                document.getElementById("season-selector").selectedIndex = 0;
+                document.getElementById("season-selector").addEventListener("change", () => {
+                    nautsRankings.leaderboardView.showLoading();
+                    this.changeSeason(document.getElementById("season-selector").value);
+                });
+                nautsRankings.seasonId = data.result[0].seasonId;
+                resolve();
+            });
+        });
     }
 
     /**
@@ -24,7 +56,7 @@ nautsRankings.SearchController = class {
             document.getElementById("result-count").textContent = data.result; // TODO: Don't do this in the controller
             // Get 250 first players
             this.loadPlayersFromAPI().then(() => {
-                nautsRankings.leaderboardView.hideLoading(false);
+                nautsRankings.leaderboardView.hideLoading();
             });
         });
     }

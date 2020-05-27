@@ -337,9 +337,7 @@ select, select option {
     width: 100%!important;
   }
 
-  #search-username {
-    width: calc(100% - 50px)!important;
-  }
+
 
   #search-box {
     width: calc(100% - 30px);
@@ -348,6 +346,16 @@ select, select option {
     top: 55px;
     text-align: center;
   }
+
+  #season-selector {
+    width: calc(30% - 10px);
+  }
+
+  #search-username {
+    width: calc(70% - 50px);
+  }
+
+
 
   .search-title, .search-title-first {
     text-align: left!important;
