@@ -182,6 +182,8 @@ nautsRankings.SearchView = class {
             const img = new Image();
             img.src = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + i + ".webp";
             img.dataset.leagueId = i;
+            img.title = "League " + i;
+            img.alt = "League " + i;
             img.classList.add("league-icon");
             img.addEventListener("click", () => {
                 img.classList.toggle("selected");
@@ -221,6 +223,8 @@ nautsRankings.SearchView = class {
                 img.src = nautsRankings.config.IMAGE_PATH + "/nauts-icon/Classicon_" + naut.className + ".png";
                 img.classList.add("naut-icon");
                 img.dataset.nautId = i;
+                img.alt = naut.name;
+                img.title = naut.name;
                 img.addEventListener("click", () => {
                     img.classList.toggle("selected");
                 });

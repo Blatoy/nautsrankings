@@ -74,10 +74,12 @@ nautsRankings.LeaderboardView = class {
             const seasonPlayed = parseInt(row.seasonLoss + row.seasonWin);
             const winRate = (100 * (row.seasonWin / seasonPlayed)).toFixed(2);
             const username = row.username === null ? "<span style=\"color: rgb(255, 40, 40);\">Username not available yet</span>" : nautsRankings.Utils.escapeHTML(row.username);
-            const mainNautId = nautsRankings.Utils.escapeHTML(row.mainNautId);
+            const mainNautId = parseInt(row.mainNautId);
             const rating = row.rating;
             const rank = row.rank;
-            const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + nautsRankings.Utils.getLeagueNumberFromRank(row.rank) + ".webp";
+            const naut = nautsRankings.config.NAUTS[mainNautId];
+            const league = nautsRankings.Utils.getLeagueNumberFromRank(row.rank);
+            const leagueImagePath = nautsRankings.config.IMAGE_PATH + "leagues/UI_League" + league + ".webp";
             const imagePath = nautsRankings.config.IMAGE_PATH + "nauts-icon/Classicon_" + this.getNautFromID(mainNautId).className + ".png";
             let countryCode = nautsRankings.Utils.escapeHTML(String(row.countryCode));
 
@@ -91,12 +93,12 @@ nautsRankings.LeaderboardView = class {
             // Append the text to the table content
             tableContent +=
         "<tr>" +
-        "<td><div><img style='float:left;' src='" + leagueImagePath + "'/> " + rank + "</div></td>" +
+        "<td><div><img alt='League " + league + "' title='League " + league + "' style='float:left;' src='" + leagueImagePath + "'/> " + rank + "</div></td>" +
         "<td><a href='" + profileURL + "' target='_blank'>" + username + "</a></td>" +
         "<td>" + winRate + "%</td>" +
         "<td>" + seasonPlayed + "</td>" +
         "<td>" + totalPlayed + "</td>" +
-        "<td><img src='" + imagePath + "'/></td>" +
+        "<td><img alt='" + naut.name + "' title='" + naut.name + "' src='" + imagePath + "'/></td>" +
         "<td>" + rating + "</td>" +
         "<td>" + countryCode + "</td>" +
         "</tr>";
